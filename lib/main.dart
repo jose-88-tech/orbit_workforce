@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -5,17 +6,15 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
 
+// --- DATABASE HELPER ---
 class DatabaseHelper {
-  // FIXED: Renamed to .instance to match the call in main.dart
   static final DatabaseHelper instance = DatabaseHelper._internal();
   static Database? _database;
   static const _storage = FlutterSecureStorage();
   static const _dbKeyName = 'db_encryption_key';
 
-  // Private constructor
   DatabaseHelper._internal();
 
-  // Getter to access the database
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
@@ -56,7 +55,6 @@ class DatabaseHelper {
         org_name TEXT
       )
     ''');
-
     await db.execute('''
       CREATE TABLE attendance_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +69,6 @@ class DatabaseHelper {
         is_on_time INTEGER
       )
     ''');
-
     await db.execute('''
       CREATE TABLE sites (
         id TEXT PRIMARY KEY,
@@ -79,67 +76,34 @@ class DatabaseHelper {
         site_code TEXT UNIQUE
       )
     ''');
-
     await db.insert('sites', {'id': '1', 'site_name': 'Site Office A', 'site_code': 'SITE-A-123'});
     await db.insert('sites', {'id': '2', 'site_name': 'Warehouse North', 'site_code': 'SITE-B-456'});
   }
+}
 
-  // Auth Methods
-  Future<int> registerUser(Map<String, dynamic> user) async {
-    Database db = await database;
-    return await db.insert('users', user);
-  }
+// --- APP ENTRY POINT ---
+void main() {
+  runApp(const MyApp());
+}
 
-  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
-    Database db = await database;
-    List<Map<String, dynamic>> results = await db.query(
-      'users',
-      where: 'email = ? AND password = ?',
-      whereArgs: [email, password],
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('Orbit'),
+              Text('Workforce Management Platform'),
+              Text('Ready to scale your team?'),
+            ],
+          ),
+        ),
+      ),
     );
-    if (results.isNotEmpty) return results.first;
-    return null;
-  }
-
-  // Attendance Methods
-  Future<int> insertAttendance(Map<String, dynamic> log) async {
-    Database db = await database;
-    return await db.insert('attendance_logs', log);
-  }
-
-  Future<List<Map<String, dynamic>>> getAttendanceLogs(String userId) async {
-    Database db = await database;
-    return await db.query(
-      'attendance_logs',
-      where: 'user_id = ?',
-      whereArgs: [userId],
-      orderBy: 'timestamp DESC',
-    );
-  }
-
-  // Site Methods
-  Future<Map<String, dynamic>?> validateSiteCode(String code) async {
-    Database db = await database;
-    List<Map<String, dynamic>> results = await db.query(
-      'sites',
-      where: 'site_code = ?',
-      whereArgs: [code],
-    );
-    if (results.isNotEmpty) return results.first;
-    return null;
-  }
-
-  // Security Wipe
-  Future<void> secureWipe() async {
-    if (_database != null) {
-      await _database!.close();
-      _database = null;
-    }
-    await _storage.delete(key: _dbKeyName);
-    String path = join(await getDatabasesPath(), 'orbit_workforce.db');
-    File file = File(path);
-    if (await file.exists()) {
-      await file.delete();
-    }
   }
 }

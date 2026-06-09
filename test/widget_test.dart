@@ -1,12 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:orbit_workforce/main.dart';
+import 'package:orbit_workforce/main.dart'; // Ensure this matches your pubspec name
 
 void main() {
-  testWidgets('App starts and shows landing page', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('App landing page test', (WidgetTester tester) async {
+    // Build the app
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our landing page text is present.
+    // Wait for the UI to stabilize
+    await tester.pumpAndSettle();
+
+    // Verify the text presence
     expect(find.text('Orbit'), findsOneWidget);
     expect(find.text('Workforce Management Platform'), findsOneWidget);
     expect(find.text('Ready to scale your team?'), findsOneWidget);
