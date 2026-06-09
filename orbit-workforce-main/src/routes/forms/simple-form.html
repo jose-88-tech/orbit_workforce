@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple GET and POST Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+    }
+    form {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      max-width: 480px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #0078d4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005a9e;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Form with GET and POST</h1>
+
+  <section>
+    <h2>GET Form</h2>
+    <p>This form sends data in the URL query string.</p>
+    <form method="get" action="/submit-get">
+      <label for="get-name">Name</label>
+      <input id="get-name" name="name" type="text" placeholder="Enter your name" required />
+
+      <label for="get-email">Email</label>
+      <input id="get-email" name="email" type="email" placeholder="Enter your email" required />
+
+      <label for="get-password-get">Password</label>
+      <input id="get-password-get" name="password" type="password" placeholder="Enter your password" required />
+
+      <button type="submit">Send with GET</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>POST Form</h2>
+    <p>This form sends data in the request body.</p>
+    <form method="post" action="/submit-post">
+      <label for="post-name">Name</label>
+      <input id="post-name" name="name" type="text" placeholder="Enter your name" required />
+
+      <label for="post-email">Email</label>
+      <input id="post-email" name="email" type="email" placeholder="Enter your email" required />
+
+      <label for="post-password">Password</label>
+      <input id="post-password" name="password" type="password" placeholder="Enter your password" required />
+
+      <button type="submit">Send with POST</button>
+    </form>
+  </section>
+</body>
+</html>
